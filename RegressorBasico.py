@@ -108,6 +108,7 @@ def treinar(model, inputs, target):
             optimizer.step()
             optimizer.zero_grad()
             count = 0
+        break
     loss_tmp = sum(vetor_loss)/len(vetor_loss)
     print("Loss media: ", loss_tmp)
     
@@ -138,26 +139,33 @@ def acuracia_classe(respostas, gold_labels):
     print("Dist: ", classes_certas, sum(classes_certas))
     return porcentagem_final
 
+def converterNota(vetor_notas):
+    nova_nota = []
+    for i in vetor_notas:
+        nova_nota.append(i*5)
+    return nova_nota
+
 def testar(model, inputs, target, iteracao, tipo):
     global maior_qwk, melhor_iteracao
     respostas = []
+    target2 = converterNota(target)
     for index in range(len(inputs)):
         with torch.no_grad():
             tokenizado = TokenizarUmParagrafo(inputs[index])
             output = model(tokenizado)
             nota = output.cpu().detach().numpy()
-            nota_final = np.rint(nota[0])
+            nota_final = np.rint(5*nota[0])
         respostas.append(nota_final)
-    QWK = metrics.cohen_kappa_score(target, respostas, weights='quadratic')
+    QWK = metrics.cohen_kappa_score(target2, respostas, weights='quadratic')
     if(tipo=="validacao"):
         if (QWK > maior_qwk):
             print("Encontrei uma QWK maior <<<<<")
             maior_qwk = QWK
             melhor_iteracao = iteracao
     print("QWK: ", QWK)
-    print("MSE: ", metrics.mean_squared_error(target, respostas, squared=True))
-    print("Porcentagem das classes: ", acuracia_classe(respostas, target))
-    print("Total acc: ", metrics.accuracy_score(target, respostas))
+    print("MSE: ", metrics.mean_squared_error(target2, respostas, squared=True))
+    print("Porcentagem das classes: ", acuracia_classe(respostas, target2))
+    print("Total acc: ", metrics.accuracy_score(target2, respostas))
 
 ds = Dataset(3)
 maior_qwk = -2
