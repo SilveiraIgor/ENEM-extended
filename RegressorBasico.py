@@ -81,7 +81,7 @@ class CustomModel(nn.Module):
     def __init__(self): 
         super(CustomModel,self).__init__() 
         self.model = AutoModel.from_pretrained(modelo).to(device)
-        self.classifier = nn.Sequential(nn.Linear(1024,1))
+        self.classifier = nn.Sequential(nn.Linear(768,1))
     def forward(self, input_ids):
         #print("Input: ", input_ids.size())
         with torch.no_grad():
@@ -159,14 +159,14 @@ def testar(model, inputs, target, iteracao, tipo):
     print("Porcentagem das classes: ", acuracia_classe(respostas, target))
     print("Total acc: ", metrics.accuracy_score(target, respostas))
 
-ds = Dataset(1)
+ds = Dataset(2)
 maior_qwk = -2
 melhor_iteracao = -2
 texto_treinamento, nota_treinamento = ds.gerarTreinamento()
 texto_teste, nota_teste = ds.gerarTeste()
 texto_valid, nota_valid = ds.gerarValidacao()
-modelo = 'xlm-roberta-large'
-#modelo = "neuralmind/bert-large-portuguese-cased"
+#modelo = 'xlm-roberta-large'
+modelo = "neuralmind/bert-base-portuguese-cased"
 tokenizer = AutoTokenizer.from_pretrained(modelo,model_max_length=512, truncation=True, do_lower_case=False)
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print(device)
@@ -175,7 +175,7 @@ print(len(novos_inputs))
 novas_notas = TransformarNotasEmVetor(texto_treinamento, nota_treinamento)
 print(len(novas_notas))
 model2 = CustomModel().to(device)
-for i in range(1):
+for i in range(5):
     print("Iteracao ", i+1)
     treinar(model2, novos_inputs, novas_notas)
     print("-- Treinamento: ")
