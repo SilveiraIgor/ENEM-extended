@@ -158,9 +158,11 @@ ds = Dataset(1)
 texto_treinamento, nota_treinamento = ds.gerarTreinamento()
 texto_teste, nota_teste = ds.gerarTeste()
 texto_valid, nota_valid = ds.gerarValidacao()
-modelo = 'xlm-roberta-large'
+#modelo = 'xlm-roberta-large'
 #modelo = "neuralmind/bert-large-portuguese-cased"
-tokenizer = AutoTokenizer.from_pretrained(modelo,model_max_length=512, truncation=True, do_lower_case=False)
+modelo = "markussagen/xlm-roberta-longformer-base-4096"
+tamanho_frase = 4096
+tokenizer = AutoTokenizer.from_pretrained(modelo,model_max_length=tamanho_frase, do_lower_case=False)
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print(device)
 novos_inputs = TransformarTextoEmInput(texto_treinamento)
@@ -168,7 +170,7 @@ print(len(novos_inputs))
 novas_notas = TransformarNotasEmVetor(texto_treinamento, nota_treinamento)
 print(len(novas_notas))
 model2 = CustomModel().to(device)
-for i in range(1):
+for i in range(2):
     print("Iteracao ", i+1)
     treinar(model2, novos_inputs, novas_notas)
     print("-- Treinamento: ")
