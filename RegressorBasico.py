@@ -159,7 +159,7 @@ def testar(model, inputs, target, iteracao, tipo):
     print("Porcentagem das classes: ", acuracia_classe(respostas, target))
     print("Total acc: ", metrics.accuracy_score(target, respostas))
 
-ds = Dataset(1)
+ds = Dataset(2)
 maior_qwk = -2
 melhor_iteracao = -2
 texto_treinamento, nota_treinamento = ds.gerarTreinamento()
@@ -177,7 +177,7 @@ print(len(novos_inputs))
 novas_notas = TransformarNotasEmVetor(texto_treinamento, nota_treinamento)
 print(len(novas_notas))
 model2 = CustomModel().to(device)
-for i in range(2):
+for i in range(5):
     print("Iteracao ", i+1)
     treinar(model2, novos_inputs, novas_notas)
     print("-- Treinamento: ")
