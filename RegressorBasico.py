@@ -108,7 +108,6 @@ def treinar(model, inputs, target):
             optimizer.step()
             optimizer.zero_grad()
             count = 0
-        break
     loss_tmp = sum(vetor_loss)/len(vetor_loss)
     print("Loss media: ", loss_tmp)
     
