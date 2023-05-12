@@ -166,10 +166,8 @@ texto_treinamento, nota_treinamento = ds.gerarTreinamento()
 texto_teste, nota_teste = ds.gerarTeste()
 texto_valid, nota_valid = ds.gerarValidacao()
 #modelo = 'xlm-roberta-large'
-#modelo = "neuralmind/bert-large-portuguese-cased"
-modelo = "markussagen/xlm-roberta-longformer-base-4096"
-tamanho_frase = 4096
-tokenizer = AutoTokenizer.from_pretrained(modelo,model_max_length=tamanho_frase, do_lower_case=False)
+modelo = "neuralmind/bert-base-portuguese-cased"
+tokenizer = AutoTokenizer.from_pretrained(modelo,model_max_length=512, truncation=True, do_lower_case=False)
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print(device)
 novos_inputs = TransformarTextoEmInput(texto_treinamento)
