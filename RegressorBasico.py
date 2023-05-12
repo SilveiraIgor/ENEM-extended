@@ -159,7 +159,7 @@ def testar(model, inputs, target, iteracao, tipo):
     print("Porcentagem das classes: ", acuracia_classe(respostas, target))
     print("Total acc: ", metrics.accuracy_score(target, respostas))
 
-ds = Dataset(2)
+ds = Dataset(3)
 maior_qwk = -2
 melhor_iteracao = -2
 texto_treinamento, nota_treinamento = ds.gerarTreinamento()
