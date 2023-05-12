@@ -81,7 +81,7 @@ class CustomModel(nn.Module):
     def __init__(self): 
         super(CustomModel,self).__init__() 
         self.model = AutoModel.from_pretrained(modelo).to(device)
-        self.classifier = nn.Sequential(nn.Linear(1024,1))
+        self.classifier = nn.Sequential(nn.Linear(768,1))
     def forward(self, input_ids):
         #print("Input: ", input_ids.size())
         with torch.no_grad():
