@@ -138,7 +138,8 @@ def acuracia_classe(respostas, gold_labels):
     print("Dist: ", classes_certas, sum(classes_certas))
     return porcentagem_final
 
-def testar(model, inputs, target):
+def testar(model, inputs, target, iteracao, tipo):
+    global maior_qwk, melhor_iteracao
     respostas = []
     for index in range(len(inputs)):
         with torch.no_grad():
@@ -147,14 +148,20 @@ def testar(model, inputs, target):
             nota = output.cpu().detach().numpy()
             nota_final = np.rint(nota[0])
         respostas.append(nota_final)
-    #print(respostas)
-    print("QWK: ", metrics.cohen_kappa_score(target, respostas, weights='quadratic'))
-    #print("RMSE: ", metrics.mean_squared_error(target, respostas, squared=False))
+    QWK = metrics.cohen_kappa_score(target, respostas, weights='quadratic')
+    if(tipo=="validacao"):
+        if (QWK > maior_qwk):
+            print("Encontrei uma QWK maior <<<<<")
+            maior_qwk = QWK
+            melhor_iteracao = iteracao
+    print("QWK: ", QWK)
     print("MSE: ", metrics.mean_squared_error(target, respostas, squared=True))
     print("Porcentagem das classes: ", acuracia_classe(respostas, target))
     print("Total acc: ", metrics.accuracy_score(target, respostas))
 
 ds = Dataset(1)
+maior_qwk = -2
+melhor_iteracao = -2
 texto_treinamento, nota_treinamento = ds.gerarTreinamento()
 texto_teste, nota_teste = ds.gerarTeste()
 texto_valid, nota_valid = ds.gerarValidacao()
@@ -174,8 +181,9 @@ for i in range(2):
     print("Iteracao ", i+1)
     treinar(model2, novos_inputs, novas_notas)
     print("-- Treinamento: ")
-    testar(model2, texto_treinamento, nota_treinamento)
+    testar(model2, texto_treinamento, nota_treinamento, i+1, "treinamento")
     print("--Validacao:")
-    testar(model2, texto_valid, nota_valid)
+    testar(model2, texto_valid, nota_valid, i+1, "validacao")
     print("--Teste:")
-    testar(model2, texto_teste, nota_teste)
+    testar(model2, texto_teste, nota_teste, i+1, "teste")
+print("Melhor iteracao: ", melhor_iteracao)
