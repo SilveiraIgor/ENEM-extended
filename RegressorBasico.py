@@ -39,7 +39,7 @@ class Dataset:
         for index, row in self.train.iterrows():
             texto = self.UnirListas(row['essay'])
             #notas.append( float(row['competence'][self.competence] / 40))
-            notas.append( float(row[self.competence] / 40))
+            notas.append( float(row[self.competence] / 200))
             textos.append(texto)
         return textos, notas
     def gerarTeste(self):
@@ -47,7 +47,7 @@ class Dataset:
         notas = []
         for index, row in self.test.iterrows():
             texto = self.UnirListas(row['essay'])
-            notas.append( float(row[self.competence] / 40))
+            notas.append( float(row[self.competence] / 200))
             textos.append(texto)
         return textos, notas
     def gerarValidacao(self):
@@ -55,7 +55,7 @@ class Dataset:
         notas = []
         for index, row in self.valid.iterrows():
             texto = self.UnirListas(row['essay'])
-            notas.append( float(row[self.competence] / 40))
+            notas.append( float(row[self.competence] / 200))
             textos.append(texto)
         return textos, notas
 
@@ -81,7 +81,7 @@ class CustomModel(nn.Module):
     def __init__(self): 
         super(CustomModel,self).__init__() 
         self.model = AutoModel.from_pretrained(modelo).to(device)
-        self.classifier = nn.Sequential(nn.Linear(768,1))
+        self.classifier = nn.Sequential(nn.Linear(768,1), nn.Sigmoid())
     def forward(self, input_ids):
         #print("Input: ", input_ids.size())
         with torch.no_grad():
